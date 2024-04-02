@@ -1,0 +1,7 @@
+playwright install chromium
+playwright codegen
+playwright show-trace trace.zip
+
+''
+'.'     class
+'#'     id
