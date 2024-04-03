@@ -1,10 +1,10 @@
 # 基础配置
-PLATFORM = "xhs"
+PLATFORM = "bili"
 KEYWORDS = "python,golang"
 LOGIN_TYPE = "qrcode"  # qrcode or phone or cookie
 COOKIES = ""
 SORT_TYPE = "popularity_descending"  # 具体值参见media_platform.xxx.field下的枚举值，展示只支持小红书
-CRAWLER_TYPE = "search" # 爬取类型，search(关键词搜索) | detail(帖子相亲)| creator(创作者主页数据)
+CRAWLER_TYPE = "detail" # 爬取类型，search(关键词搜索) | detail(帖子相亲)| creator(创作者主页数据)
 
 # 是否开启 IP 代理
 ENABLE_IP_PROXY = False
@@ -13,13 +13,13 @@ ENABLE_IP_PROXY = False
 IP_PROXY_POOL_COUNT = 2
 
 # 设置为True不会打开浏览器（无头浏览器），设置False会打开一个浏览器（小红书如果一直扫码登录不通过，打开浏览器手动过一下滑动验证码）
-HEADLESS = True
+HEADLESS = False
 
 # 是否保存登录状态
 SAVE_LOGIN_STATE = True
 
 # 数据保存类型选项配置,支持三种类型：csv、db、json
-SAVE_DATA_OPTION = "json"  # csv or db or json
+SAVE_DATA_OPTION = "db"  # csv or db or json
 
 # 用户浏览器缓存的浏览器文件配置
 USER_DATA_DIR = "%s_user_data_dir"  # %s will be replaced by platform name
@@ -54,11 +54,11 @@ KS_SPECIFIED_ID_LIST = [
     "3x6zz972bchmvqe"
 ]
 
-# 指定B站平台需要爬取的视频bvid列表
+# 指定B站平台需要爬取的视频bvid列表   tsp
 BILI_SPECIFIED_ID_LIST = [
     "BV1d54y1g7db",
-    "BV1Sz4y1U77N",
-    "BV14Q4y1n7jz",
+    # "BV1Sz4y1U77N",
+    # "BV14Q4y1n7jz",
     # ........................
 ]
 

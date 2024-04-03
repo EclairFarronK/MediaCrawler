@@ -39,6 +39,7 @@ async def main():
     parser.add_argument('--type', type=str, help='crawler type (search | detail | creator)',
                         choices=["search", "detail", "creator"], default=config.CRAWLER_TYPE)
 
+    # 数据都是csv、db、json格式，暂时不去研究  tsp
     # init db
     if config.SAVE_DATA_OPTION == "db":
         await db.init_db()
@@ -51,13 +52,15 @@ async def main():
         crawler_type=args.type
     )
     await crawler.start()
-    
+
+    # 不去研究
     if config.SAVE_DATA_OPTION == "db":
         await db.close()
 
 
 if __name__ == '__main__':
     try:
+        # todo 这里就一个进程，为什么要使用事件循环？
         # asyncio.run(main())
         asyncio.get_event_loop().run_until_complete(main())
     except KeyboardInterrupt:

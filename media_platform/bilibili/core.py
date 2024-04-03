@@ -35,6 +35,7 @@ class BilibiliCrawler(AbstractCrawler):
 
     def __init__(self):
         self.index_url = "https://www.bilibili.com"
+        # todo 驱动浏览区去访问，为什么还需要User-Agent
         self.user_agent = utils.get_user_agent()
 
     def init_config(self, platform: str, login_type: str, crawler_type: str):
@@ -44,6 +45,7 @@ class BilibiliCrawler(AbstractCrawler):
 
     async def start(self):
         playwright_proxy_format, httpx_proxy_format = None, None
+        # 没有使用代理，不去研究
         if config.ENABLE_IP_PROXY:
             ip_proxy_pool = await create_ip_pool(config.IP_PROXY_POOL_COUNT, enable_validate_ip=True)
             ip_proxy_info: IpInfoModel = await ip_proxy_pool.get_proxy()
@@ -252,7 +254,8 @@ class BilibiliCrawler(AbstractCrawler):
                 headless=headless,
                 proxy=playwright_proxy,  # type: ignore
                 viewport={"width": 1920, "height": 1080},
-                user_agent=user_agent
+                user_agent=user_agent,
+                # executable_path='C:\Program Files\Google\Chrome\Application\chrome.exe',
             )
             return browser_context
         else:
