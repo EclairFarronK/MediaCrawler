@@ -2,6 +2,7 @@ from playwright.sync_api import sync_playwright
 
 with sync_playwright() as p:
     browser = p.chromium.launch(headless=False)
+    # browser = p.chromium.launch(headless=False, executable_path='C:\Program Files\Google\Chrome\Application\chrome.exe')
     page = browser.new_page()
     page.goto("https://www.byhy.net/_files/stock1.html")
     print(page.title())
