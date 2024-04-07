@@ -57,7 +57,7 @@ async def main():
     if config.SAVE_DATA_OPTION == "db":
         await db.close()
 
-
+# todo 之前好像使用了旧版的可以去下载抖音视频
 if __name__ == '__main__':
     try:
         # todo 这里就一个进程，为什么要使用事件循环？

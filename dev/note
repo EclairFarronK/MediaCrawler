@@ -1,5 +1,5 @@
 playwright install chromium
-playwright codegen
+playwright codegen --browser firefox
 playwright show-trace trace.zip
 
 ''
