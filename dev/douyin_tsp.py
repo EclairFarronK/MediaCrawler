@@ -6,6 +6,7 @@ from playwright.async_api import async_playwright
 
 
 def save_douyin_videos(keyword, file_name, video_url):
+    print(video_url)
     folder_name = keyword  # 使用关键词命名文件夹
 
     if not os.path.exists(folder_name):
@@ -29,13 +30,11 @@ def filter_filename(filename):
 
 async def search_douyin_videos(keyword, scroll_count):
     async with async_playwright() as p:
-        browser = await p.firefox.launch(headless=False)
-        # browser = await p.chromium.launch(headless=False,
-        #                                   executable_path='C:\Program Files (x86)\Google\Chrome\Application\chrone.exe')
+        browser = await p.chromium.launch(headless=False)
         page = await browser.new_page()
         await page.set_viewport_size({"width": 1280, "height": 800})
         await page.goto('https://www.douyin.com/search/搜索')
-        await page.time
+        await asyncio.sleep(3)
         await asyncio.sleep(3)
         # 在输入框中输入“python”
         await page.fill('input', keyword + "视频")

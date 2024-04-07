@@ -96,7 +96,7 @@ class WeiboCrawler(AbstractCrawler):
                 await self.get_specified_notes()
             else:
                 pass
-            utils.logger.info("[WeiboCrawler.start] Bilibili Crawler finished ...")
+            utils.logger.info("[WeiboCrawler.start] Weibo Crawler finished ...")
 
     async def search(self):
         """
@@ -104,7 +104,9 @@ class WeiboCrawler(AbstractCrawler):
         :return:
         """
         utils.logger.info("[WeiboCrawler.search] Begin search weibo keywords")
-        weibo_limit_count = 10
+        weibo_limit_count = 10  # weibo limit page fixed value
+        if config.CRAWLER_MAX_NOTES_COUNT < weibo_limit_count:
+            config.CRAWLER_MAX_NOTES_COUNT = weibo_limit_count
         for keyword in config.KEYWORDS.split(","):
             utils.logger.info(f"[WeiboCrawler.search] Current search keyword: {keyword}")
             page = 1
