@@ -5,6 +5,7 @@ import requests
 from playwright.async_api import async_playwright
 
 
+# todo 根据搜索来下载视频，不需要登录，将下载方法提取出来
 def save_douyin_videos(keyword, file_name, video_url):
     folder_name = keyword  # 使用关键词命名文件夹
 
@@ -22,6 +23,7 @@ def save_douyin_videos(keyword, file_name, video_url):
                 f.write(chunk)
 
 
+# 将\/:*?"<>| 替换为空字符串
 def filter_filename(filename):
     filtered_filename = re.sub(r'[\\/:*?"<>| ]+', '', filename)
     return filtered_filename
@@ -35,13 +37,12 @@ async def search_douyin_videos(keyword, scroll_count):
         page = await browser.new_page()
         await page.set_viewport_size({"width": 1280, "height": 800})
         await page.goto('https://www.douyin.com/search/搜索')
-        await page.time
-        await asyncio.sleep(3)
+        await page.wait_for_timeout(5000)
         # 在输入框中输入“python”
         await page.fill('input', keyword + "视频")
         # 点击搜索按钮
         await page.click('.rB8dMXOc')
-        await asyncio.sleep(3)
+        await page.wait_for_timeout(3000)
 
         links = await page.query_selector_all('.BL9IYM4m')
         arr = []
@@ -53,9 +54,9 @@ async def search_douyin_videos(keyword, scroll_count):
                 arr.append(video_src)
 
             await page.evaluate('window.scrollBy(0, window.innerHeight)')
-            await asyncio.sleep(3)
+            await page.wait_for_timeout(7000)
 
-        await asyncio.sleep(2)
+        await page.wait_for_timeout(7000)
         titles = await page.query_selector_all('.KxCuain0')
         print(len(arr))
         print(len(titles))
