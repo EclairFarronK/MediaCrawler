@@ -2,7 +2,7 @@ import os
 from playwright.sync_api import Playwright, sync_playwright
 
 # todo 输入up主的这个号就行了
-str = '3546595161278780'
+str = '275270856'
 USER_DATA_DIR = '%s_user_data_dir'
 url = 'https://space.bilibili.com/' + str + '/video?tid=0'
 file_path = './data/'

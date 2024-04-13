@@ -8,11 +8,11 @@ from playwright.sync_api import Playwright, sync_playwright
 from dev.tool.tools import sanitize_filename
 
 # todo 输入文件名，提取bvid，然后下载
-file_download_path = './data/软羊羊双视/'
+file_download_path = './data/邹小荃/'
 # 目录没有就创建
 os.makedirs(file_download_path, exist_ok=True)
 
-file_name = './data/软羊羊双视.txt'
+file_name = './data/邹小荃.txt'
 USER_DATA_DIR = '%s_user_data_dir'
 url = 'https://www.bilibili.com/video/'
 headers = {
@@ -62,7 +62,7 @@ def run(playwright: Playwright) -> None:
         print("{:*^30}".format(f"下载完成：{data_title}"))
 
         # 合并，将之前的删除
-        commond = f'ffmpeg -i {file_download_path}{data_title}.mp4 -i {file_download_path}{data_title}.mp3 -c:v copy -c:a aac -strict experimental {file_download_path}{data_title}_.mp4'
+        commond = f'ffmpeg -i {file_download_path}{data_title}.mp4 -i {file_download_path}{data_title}.mp3 -c:v copy -c:a aac -strict experimental {file_download_path}{data_title}_{line}.mp4'
         subprocess.run(commond, shell=True)
         os.remove(f'{file_download_path}{data_title}.mp3')
         os.remove(f'{file_download_path}{data_title}.mp4')
