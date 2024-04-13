@@ -38,6 +38,10 @@ async def main():
                         choices=["qrcode", "phone", "cookie"], default=config.LOGIN_TYPE)
     parser.add_argument('--type', type=str, help='crawler type (search | detail | creator)',
                         choices=["search", "detail", "creator"], default=config.CRAWLER_TYPE)
+    parser.add_argument('--start', type=int, help='crawler type (number of start page)',
+                        default=config.START_PAGE)
+    parser.add_argument('--keywords', type=str, help='crawler type (please input keywords)',
+                        default=config.KEYWORDS)
 
     # 数据都是csv、db、json格式，暂时不去研究  tsp
     # init db
@@ -49,13 +53,16 @@ async def main():
     crawler.init_config(
         platform=args.platform,
         login_type=args.lt,
-        crawler_type=args.type
+        crawler_type=args.type,
+        start_page=args.start,
+        keyword=args.keywords
     )
     await crawler.start()
 
     # 不去研究
     if config.SAVE_DATA_OPTION == "db":
         await db.close()
+
 
 # todo 之前好像使用了旧版的可以去下载抖音视频
 if __name__ == '__main__':
