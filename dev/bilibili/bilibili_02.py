@@ -1,4 +1,6 @@
+import asyncio
 import os
+import re
 import json
 import subprocess
 
@@ -21,25 +23,43 @@ headers = {
 }
 
 
-def run(playwright: Playwright) -> None:
-    print(os.getcwd())
-    context = playwright.firefox.launch_persistent_context(headless=False,
-                                                           user_data_dir=os.path.join(os.getcwd(), 'browser_data',
-                                                                                      USER_DATA_DIR % 'bili'))
-    page = context.new_page()
+def start(playwright: Playwright) -> None:
     # todo 读取成字符串
     with open(file_name, 'r') as file:
         # 读取文件内容，并将每行作为列表的一个元素
         lines = file.readlines()
     lines = [line.strip() for line in lines]
+    # todo 获取视频的bv号，去重
+    lists = []
+    files = os.listdir(file_download_path)
+    for file in files:
+        # todo 暂时这样写，假设bvid只有数字和字母大小写
+        start_index = file.rfind('_') + 1
+        end_index = file.rfind('.mp4')
+        if start_index != -1 and end_index != -1:
+            video_id = file[start_index:end_index]
+            print(video_id)
+            lists.append(video_id)
+        else:
+            print("没有找到符合条件的字符串")
+
+    difference = set(lines) - set(lists)
+    lines = list(difference)
+    print(len(lines))
+
+    context = playwright.firefox.launch_persistent_context(headless=False,
+                                                           user_data_dir=os.path.join(os.getcwd(), 'browser_data',
+                                                                                      USER_DATA_DIR % 'bili'))
+    page = context.new_page()
+
     for line in lines:
         page.goto(url + line)
-        list = page.locator('head script').all()
+        url_list = page.locator('head script').all()
         data_title = page.locator('[data-title]').get_attribute('data-title')
         data_title = sanitize_filename(data_title)
 
         flag = 0
-        for i in list:
+        for i in url_list:
             if flag == 3:
                 original = i.inner_text()
                 result = original.replace('window.__playinfo__=', '')
@@ -62,12 +82,18 @@ def run(playwright: Playwright) -> None:
         print("{:*^30}".format(f"下载完成：{data_title}"))
 
         # 合并，将之前的删除
+        print(file_download_path + data_title + '.mp4')
         commond = f'ffmpeg -i {file_download_path}{data_title}.mp4 -i {file_download_path}{data_title}.mp3 -c:v copy -c:a aac -strict experimental {file_download_path}{data_title}_{line}.mp4'
         subprocess.run(commond, shell=True)
+        # page.wait_for_timeout(500)
         os.remove(f'{file_download_path}{data_title}.mp3')
         os.remove(f'{file_download_path}{data_title}.mp4')
     context.close()
 
 
+def method_name(commond):
+    subprocess.run(commond, shell=True)
+
+
 with sync_playwright() as playwright:
-    run(playwright)
+    start(playwright)
