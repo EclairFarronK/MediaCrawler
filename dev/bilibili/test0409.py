@@ -50,6 +50,8 @@ class BilibiliVideoAudio:
         try:
             # 发送请求下载视频或音频文件
             resp = requests.get(url, headers=self.headers).content
+            print(filename.__class__)
+            print(filename)
             download_path = os.path.join('D:\\video', filename)  # 构造下载路径
             with open(download_path, mode='wb') as file:
                 file.write(resp)
