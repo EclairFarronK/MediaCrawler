@@ -1,20 +1,18 @@
-import asyncio
 import os
-import re
 import json
 import subprocess
-
 import requests
+from dev.tool.tools import sanitize_filename
 from playwright.sync_api import Playwright, sync_playwright
 
-from dev.tool.tools import sanitize_filename
-
+# todo 文件夹名字
 # todo 输入文件名，提取bvid，然后下载
-file_download_path = './data/邹小荃/'
+name='是函数呀'
+file_download_path = f'./data/{name}/'
 # 目录没有就创建
 os.makedirs(file_download_path, exist_ok=True)
 
-file_name = './data/邹小荃.txt'
+file_name = f'./data/{name}.txt'
 USER_DATA_DIR = '%s_user_data_dir'
 url = 'https://www.bilibili.com/video/'
 headers = {
@@ -24,16 +22,15 @@ headers = {
 
 
 def start(playwright: Playwright) -> None:
-    # todo 读取成字符串
+    # 读取文件内容，并将每行作为列表的一个元素
     with open(file_name, 'r') as file:
-        # 读取文件内容，并将每行作为列表的一个元素
         lines = file.readlines()
     lines = [line.strip() for line in lines]
-    # todo 获取视频的bv号，去重
+
+    # 获取视频的bv号，去重
     lists = []
     files = os.listdir(file_download_path)
     for file in files:
-        # todo 暂时这样写，假设bvid只有数字和字母大小写
         start_index = file.rfind('_') + 1
         end_index = file.rfind('.mp4')
         if start_index != -1 and end_index != -1:
@@ -47,11 +44,11 @@ def start(playwright: Playwright) -> None:
     lines = list(difference)
     print(len(lines))
 
-    context = playwright.firefox.launch_persistent_context(headless=False,
+    context = playwright.firefox.launch_persistent_context(headless=True,
                                                            user_data_dir=os.path.join(os.getcwd(), 'browser_data',
                                                                                       USER_DATA_DIR % 'bili'))
     page = context.new_page()
-
+    # todo 这一段怎么异步来提高效率？
     for line in lines:
         page.goto(url + line)
         url_list = page.locator('head script').all()
@@ -68,6 +65,7 @@ def start(playwright: Playwright) -> None:
                 url_audio_download = data["data"]['dash']['audio'][0]['baseUrl']
                 break
             flag = flag + 1
+        #     todo 不去研究了
         # resp = page.request.get(url=url_download, headers=headers)
         resp = requests.get(url_video_download, headers=headers).content
         download_path = os.path.join(file_download_path, data_title + '.mp4')  # 构造下载路径
@@ -85,7 +83,6 @@ def start(playwright: Playwright) -> None:
         print(file_download_path + data_title + '.mp4')
         commond = f'ffmpeg -i {file_download_path}{data_title}.mp4 -i {file_download_path}{data_title}.mp3 -c:v copy -c:a aac -strict experimental {file_download_path}{data_title}_{line}.mp4'
         subprocess.run(commond, shell=True)
-        # page.wait_for_timeout(500)
         os.remove(f'{file_download_path}{data_title}.mp3')
         os.remove(f'{file_download_path}{data_title}.mp4')
     context.close()
