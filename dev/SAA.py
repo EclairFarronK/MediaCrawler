@@ -21,7 +21,7 @@ def run(playwright: Playwright) -> None:
     print(len(locators))
     print(locators[2].get_attribute('src'))
     page.wait_for_timeout(7000)
-    list = page.locator('.XWJRuUYW .ztA3qIFr').all()
+    list = page.locator('.XWJRuUYW #').all()
     print(len(list))
     for count in range(len(list)):
         page.locator("a").filter(has_text=list[count + 1].inner_text()).click()
