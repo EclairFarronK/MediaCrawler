@@ -2,9 +2,9 @@ import os
 from playwright.sync_api import Playwright, sync_playwright
 
 # todo 输入up主的这个号就行了
-str = '387308944'
+up = '1729574114'
 USER_DATA_DIR = '%s_user_data_dir'
-url = f'https://space.bilibili.com/{str}/video?tid=0'
+url = f'https://space.bilibili.com/{up}/video?tid=0'
 file_path = './data/'
 
 
@@ -13,7 +13,7 @@ file_path = './data/'
 # todo 自动拉取，看是否更新，如果更新就下载新的
 def run(playwright: Playwright) -> None:
     print(os.getcwd())
-    browser = playwright.firefox.launch_persistent_context(headless=False,
+    browser = playwright.firefox.launch_persistent_context(headless=True,
                                                            user_data_dir=os.path.join(os.getcwd(), 'browser_data',
                                                                                       USER_DATA_DIR % 'bili'))
     page = browser.new_page()

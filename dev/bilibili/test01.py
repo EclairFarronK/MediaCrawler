@@ -1,4 +1,6 @@
-import subprocess
+import os
 
-commond = f'ffmpeg -i ./data/邹小荃/Daily vlog.mp4 -i ./data/邹小荃/Daily vlog.mp4.mp3 -c:v copy -c:a aac -strict experimental ./data/邹小荃/Daily vlog.mp4_xxxxx.mp4'
-subprocess.run(commond, shell=True)
+name = '软月月-疯狂减脂版'
+file_download_path = f'G:/bilibili/{name}/'
+# 目录没有就创建
+os.makedirs(file_download_path, exist_ok=True)
