@@ -7,7 +7,7 @@ from playwright.sync_api import Playwright, sync_playwright
 
 # todo 文件夹名字
 # todo 输入文件名，提取bvid，然后下载
-name = '孬子妹'
+name = '江小帆530'
 file_download_path = f'G:/bilibili/{name}/'
 # 目录没有就创建
 os.makedirs(file_download_path, exist_ok=True)

@@ -2,7 +2,7 @@ import os
 from playwright.sync_api import Playwright, sync_playwright
 
 # todo 输入up主的这个号就行了
-up = '1729574114'
+up = '591999801'
 USER_DATA_DIR = '%s_user_data_dir'
 url = f'https://space.bilibili.com/{up}/video?tid=0'
 file_path = './data/'
@@ -13,7 +13,7 @@ file_path = './data/'
 # todo 自动拉取，看是否更新，如果更新就下载新的
 def run(playwright: Playwright) -> None:
     print(os.getcwd())
-    browser = playwright.firefox.launch_persistent_context(headless=True,
+    browser = playwright.firefox.launch_persistent_context(headless=False,
                                                            user_data_dir=os.path.join(os.getcwd(), 'browser_data',
                                                                                       USER_DATA_DIR % 'bili'))
     page = browser.new_page()
@@ -40,21 +40,21 @@ def run(playwright: Playwright) -> None:
     total = int(page.locator('.be-pager-total').inner_text().split()[1])
     for i in range(total - 1):
         if total == 2:
-            page.get_by_role('listitem', name='最后一页:').click()
-        elif i == total - 1:
-            page.get_by_role('listitem', name='最后一页:').click()
+            page.get_by_role('listitem', name=f'最后一页:{total}', exact=True).click()
+        elif i == total - 2:
+            page.get_by_role('listitem', name=f'最后一页:{total}', exact=True).click()
         else:
             s = str(i + 2)
-            page.get_by_role('listitem', name=s).click()
+            page.get_by_role('listitem', name=s, exact=True).click()
 
         method_name(page, file_path_name)
 
-    page.wait_for_timeout(3000)
+    page.wait_for_timeout(1000)
     browser.close()
 
 
 def method_name(page, file_path_name):
-    page.wait_for_timeout(3000)
+    page.wait_for_timeout(1000)
     for i in page.locator('.list-list li').all():
         with open(file_path_name, 'a') as file:
             file.write(i.get_attribute('data-aid') + '\n')
