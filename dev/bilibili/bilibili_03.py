@@ -2,7 +2,7 @@ import os
 import mysql.connector
 from playwright.sync_api import Playwright, sync_playwright
 
-# 设置浏览器缓存位置
+# todo 浏览器缓存共用
 USER_DATA_DIR = '%s_user_data_dir'
 
 
@@ -12,7 +12,7 @@ def run(playwright: Playwright) -> None:
                                                                                       USER_DATA_DIR % 'bili'))
     page = browser.new_page()
 
-    # 建立数据库连接
+    # todo 数据库连接共用
     conn = mysql.connector.connect(
         host="43.156.129.154",
         user="tsp",
