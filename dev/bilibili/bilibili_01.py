@@ -7,6 +7,7 @@ file_path = './data/'
 USER_DATA_DIR = '%s_user_data_dir'
 
 
+# todo 被淘汰的方法，数据都放数据库去了
 def run(playwright: Playwright) -> None:
     browser = playwright.firefox.launch_persistent_context(headless=False,
                                                            user_data_dir=os.path.join(os.getcwd(), 'browser_data',
@@ -54,6 +55,7 @@ def run(playwright: Playwright) -> None:
 
         page.wait_for_timeout(500)
     browser.close()
+
 
 # todo 插入数据库，如果影响返回为0就break
 def method_name(page, file_path_name):

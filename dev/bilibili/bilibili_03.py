@@ -1,26 +1,17 @@
 import os
-import mysql.connector
+import datetime
+from dev.tool.database import conn
 from playwright.sync_api import Playwright, sync_playwright
 
 # todo 浏览器缓存共用
+cursor = conn.cursor()
 USER_DATA_DIR = '%s_user_data_dir'
-
 
 def run(playwright: Playwright) -> None:
     browser = playwright.firefox.launch_persistent_context(headless=False,
                                                            user_data_dir=os.path.join(os.getcwd(), 'browser_data',
                                                                                       USER_DATA_DIR % 'bili'))
     page = browser.new_page()
-
-    # todo 数据库连接共用
-    conn = mysql.connector.connect(
-        host="43.156.129.154",
-        user="tsp",
-        password="199409_ad",
-        database="tsp"
-    )
-    # 获取游标
-    cursor = conn.cursor()
     # 执行SQL查询
     cursor.execute("SELECT user_id,name FROM user")
     # 获取查询结果
@@ -68,8 +59,9 @@ def run(playwright: Playwright) -> None:
 def sql_01(conn, cursor, list_bvid_update, user_id, user_name):
     list_bvid_update_sql = []
     for bvid_update in list_bvid_update:
-        list_bvid_update_sql.append((user_id, user_name, bvid_update))
-    sql = "INSERT INTO bvid (user_id, name, bvid) VALUES (%s, %s, %s)"
+        current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        list_bvid_update_sql.append((user_id, user_name, bvid_update, 0, 0, current_time))
+    sql = 'INSERT INTO bvid (user_id, name, bvid, is_download, can_download, create_date) VALUES (%s, %s, %s, %s, %s, %s)'
     cursor.executemany(sql, list_bvid_update_sql)
     conn.commit()
 
