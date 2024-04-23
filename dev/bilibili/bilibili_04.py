@@ -1,6 +1,7 @@
 import os
 import json
 import requests
+import datetime
 import subprocess
 from dev.tool.database import conn
 from dev.tool.tools import sanitize_filename
@@ -74,12 +75,15 @@ def start(playwright: Playwright) -> None:
             os.remove(f'{file_download_path}{data_title}.mp3')
             os.remove(f'{file_download_path}{data_title}.mp4')
             # todo 还没有测试
-            cursor.execute('UPDATE bvid SET is_download = 1 WHERE bvid = %s', (bvid,))
+            current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            cursor.execute('UPDATE bvid SET is_download = 1, update_date = %s WHERE bvid = %s', (current_time, bvid,))
             conn.commit()
         except Exception as e:
             print(str(e))
             # todo 还没有测试
-            cursor.execute('UPDATE bvid SET can_download = 1, comment = %s WHERE bvid = %s', (str(e), bvid,))
+            current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            cursor.execute('UPDATE bvid SET can_download = 1, comment = %s, update_date = %s WHERE bvid = %s',
+                           (str(e), current_time, bvid,))
             conn.commit()
     context.close()
 
