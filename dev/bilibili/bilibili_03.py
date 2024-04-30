@@ -9,7 +9,7 @@ USER_DATA_DIR = '%s_user_data_dir'
 
 
 def run(playwright: Playwright) -> None:
-    browser = playwright.firefox.launch_persistent_context(headless=False,
+    browser = playwright.firefox.launch_persistent_context(headless=True,
                                                            user_data_dir=os.path.join(os.getcwd(), 'browser_data',
                                                                                       USER_DATA_DIR % 'bili'))
     page = browser.new_page()
